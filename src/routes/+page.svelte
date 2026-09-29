@@ -1,15 +1,9 @@
 <script lang="ts">
-	import { getCars } from "./data.remote";
-
-    const cars = await getCars()
-    
+	import { getCars } from "./data.remote";    
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
-
 <ul>
-    {#each await getCars() as car}
-        <li><a href="car/{car.id}">{car.uic}</a></li>
+    {#each await getCars() as car (car.id) }
+        <li><a href="car/{car.id}" data-car-id="{car.id}" class="car-list-item">{car.uic} ({car.nick})</a></li>
     {/each}
 </ul>
