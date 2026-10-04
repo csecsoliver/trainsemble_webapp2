@@ -1,13 +1,10 @@
 import {
 	pgTable,
-	serial,
 	integer,
 	text,
 	uuid,
 	timestamp,
-	foreignKey,
-	date,
-	PgDate
+	boolean
 } from 'drizzle-orm/pg-core';
 
 export const car = pgTable('cars', {
@@ -47,7 +44,7 @@ export const route = pgTable('routes', {
 
 export const sighting = pgTable('sightings', {
 	id: uuid('id').primaryKey().default('uuid_as_a_service()'),
-	route_id: uuid('route_id').notNull(),
+	route_id: uuid('route_id').notNull().references(()=>route.id),
 	date: timestamp('date', { withTimezone: true }).notNull(),
 	station_id: uuid('station_id')
 		.notNull()
@@ -64,4 +61,11 @@ export const user = pgTable('users', {
 	username: text('username').notNull(),
 	email: text('email'),
 	passhash: text('passhash')
+});
+
+export const token = pgTable('tokens', {
+	id: uuid('id').primaryKey().default('uuid_as_a_service()'),
+	user_id: uuid('user_id').notNull().references(()=>user.id),
+	valid: boolean().notNull().default(true),
+	token: text().notNull().unique()
 });

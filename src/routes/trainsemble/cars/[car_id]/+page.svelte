@@ -2,12 +2,32 @@
 	import type { PageProps } from './$types';
 	import { getCar } from './data.remote';
 	const props: PageProps = $props();
+	import FormField from '#lib/FormField.svelte'
 </script>
 
 <div>
 	{#await getCar(props.params.car_id)}
 		<p>Loading...</p>
 	{:then car}
+		<!-- <dialog id="car-dialog"> -->
+			<div>
+				<FormField id="uic" name="uic" type="text" label="UIC:" placeholder={car.uic} value={car.uic} submit={()=>{alert(2)}}/>
+			</div>
+			{#if car.nick}
+				<div>
+					<label>
+						Nickname:
+						<input type="text" bind:value={car.nick} />
+					</label>
+				</div>
+			{/if}
+			<div>
+				<label for="car-type">
+					Type:
+					<input type="text" id="car-type" bind:value={car.type} placeholder={car.type} />
+				</label>
+			</div>
+		<!-- </dialog> -->
 		<div>
 			<p>UIC: {car.uic}</p>
 		</div>
