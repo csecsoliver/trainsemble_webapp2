@@ -11,6 +11,7 @@
 <header>
 	<h1>Sum' page</h1>
 	<a href="/">Home</a>
+	<a href="/login">Login</a>
 	<details>
 		<summary>Trainsemble</summary>
 		<a href="/trainsemble/cars">Cars</a><br />

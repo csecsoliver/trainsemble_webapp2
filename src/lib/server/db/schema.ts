@@ -60,12 +60,16 @@ export const user = pgTable('users', {
 	id: uuid('id').primaryKey().default('uuid_as_a_service()'),
 	username: text('username').notNull(),
 	email: text('email'),
-	passhash: text('passhash')
+	passhash: text('passhash'),
+	created_at: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+	updated_at: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow()
 });
 
 export const token = pgTable('tokens', {
 	id: uuid('id').primaryKey().default('uuid_as_a_service()'),
 	user_id: uuid('user_id').notNull().references(()=>user.id),
 	valid: boolean().notNull().default(true),
-	token: text().notNull().unique()
+	token: text().notNull().unique(),
+	created_at: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+	updated_at: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow()
 });

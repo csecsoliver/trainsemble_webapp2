@@ -1,14 +1,15 @@
 import type { Handle } from '@sveltejs/kit/hooks';
-import { getUserFromToken } from '#lib/server/auth.js';
+import { getUserFromToken, logout } from '#lib/server/auth.js';
 
 export const handle: Handle = async ({ event, resolve }) => {
-	if (event.url.pathname.startsWith('/custom')) {
-		return new Response('custom response');
-	}
-    const token = event.cookies.get("token")
+	
+    const token = event.cookies.get("authToken")
     
     event.locals.user = await getUserFromToken(token ?? "");
-
+	if (!event.locals.user) {
+		await logout();
+	}
+	
 
 	const response = await resolve(event);
 	return response;

@@ -1,7 +1,8 @@
-import { getUserFromToken } from '#lib/server/auth.js';
+import { getUser } from '#lib/server/auth.js';
 import { db } from '#lib/server/db/index.js';
 import { car } from '#lib/server/db/schema.js';
 import { query, form } from '$app/server';
+import { redirect } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm';
 import { string, object } from 'zod';
 export const getCar = query(string(), async (id: string) => {
@@ -19,17 +20,11 @@ export const editCarUIC = form(
 	async ({ id, uic }) => {
 		// Check the user is logged in
 
-		const user = await getUserFromToken()
-		if (!user) error(401, 'Unauthorized');
-
-		const slug = title.toLowerCase().replace(/ /g, '-');
-
-		// Insert into the database
+		const user = await getUser()
+		if (!user) redirect(303, "/login")
 		
-		await db.update(car).set({uic: uic})
+		await db.update(car).set({uic: uic}).where(eq(car.id, id))
+		await getCar(id).refresh();
 
-		// Redirect to the newly created page
-		
-		redirect(303, `/blog/${slug}`);
 	}
 );
