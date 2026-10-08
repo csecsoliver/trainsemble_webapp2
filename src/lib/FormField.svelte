@@ -1,12 +1,27 @@
 <script lang="ts">
-    let {id, type, label, placeholder, value, name, submit} = $props()
-    
+	import type { Snippet } from 'svelte';
+	import type { HTMLFormAttributes, HTMLInputAttributes } from 'svelte/elements';
+
+	let {
+		form,
+		field,
+		id,
+		label,
+		placeholder,
+		children
+	}: {
+		form: HTMLFormAttributes;
+		field: HTMLInputAttributes;
+		id: string;
+		label: string;
+		placeholder?: string;
+		children?: Snippet;
+	} = $props();
 </script>
 
-<label for="{id}">
-    {label}
-    <input type="{type}" id="{id}" name="{name}" placeholder="{placeholder}" bind:value={value}>
-    <button onclick={()=>{
-        submit()
-    }}>Save</button>
-</label>
+<form {...form}>
+	{@render children?.()}
+	<label for={id}>{label}</label>
+	<input {...field} {id} {placeholder} />
+	<button type="submit">Save</button>
+</form>

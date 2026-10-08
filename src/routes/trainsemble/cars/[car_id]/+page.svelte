@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
-	import { getCar } from './data.remote';
+	import { editCarUIC, getCar } from './data.remote';
 	const props: PageProps = $props();
 	import FormField from '#lib/FormField.svelte'
+	import { redirect } from '@sveltejs/kit';
 </script>
 
 <div>
@@ -11,7 +12,16 @@
 	{:then car}
 		<!-- <dialog id="car-dialog"> -->
 			<div>
-				<FormField id="uic" name="uic" type="text" label="UIC:" placeholder={car.uic} value={car.uic} submit={()=>{alert(2)}}/>
+				<FormField
+					form={editCarUIC}
+					field={editCarUIC.fields.uic.as('text', car.uic)}
+					id="uic"
+					label="UIC:"
+					placeholder={car.uic}
+				>
+					<input {...editCarUIC.fields.id.as('hidden', car.id)} />
+				</FormField>
+				
 			</div>
 			{#if car.nick}
 				<div>
@@ -54,7 +64,7 @@
 				/>
 			</div>
 		{/if}
-	{:catch e}
-		{e}
+	{:catch}
+		{redirect(303, "/login")}
 	{/await}
 </div>
