@@ -1,6 +1,7 @@
-<script lang="ts">
+<script lang="ts" generics="Input extends RemoteFormInput, Output">
+	import type { RemoteForm, RemoteFormInput } from '$app/server';
 	import type { Snippet } from 'svelte';
-	import type { HTMLFormAttributes, HTMLInputAttributes } from 'svelte/elements';
+	import type { HTMLInputAttributes } from 'svelte/elements';
 
 	let {
 		form,
@@ -10,7 +11,7 @@
 		placeholder,
 		children
 	}: {
-		form: HTMLFormAttributes;
+		form: Omit<RemoteForm<Input, Output>, 'for'>;
 		field: HTMLInputAttributes;
 		id: string;
 		label: string;
@@ -22,6 +23,10 @@
 <form {...form}>
 	{@render children?.()}
 	<label for={id}>{label}</label>
+	{#if form.fields.dirty()}
+		*dirty*
+	{/if}
+	<br />
 	<input {...field} {id} {placeholder} />
 	<button type="submit">Save</button>
 </form>
